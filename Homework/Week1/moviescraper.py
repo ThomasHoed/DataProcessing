@@ -26,8 +26,11 @@ def extract_movies(dom):
     - Actors/actresses (comma separated if more than one)
     - Runtime (only a number!)
     """
+    # get html for all list items
     items = dom.findAll("div", {"class":"lister-item-content"})
+    # initiate output lists
     top_50 = list()
+    # loop over each item to extract the needed information
     for item in items:
         # get title
         title = item.a.string
@@ -35,28 +38,31 @@ def extract_movies(dom):
         rating = item.strong.string
         # get year (number only)
         year = item.find("span", {"class": "lister-item-year text-muted unbold"}).string
-        # remove extra chars
+        # remove unwanted chars
         for char in year:
-            if char in '()I ':
+            if not char.isdigit():
                 year = year.replace(char, '')
-
         # get runtime
         runtime = item.find("span", {"class": "runtime"}).string
-        runtime = runtime.replace(' min', '')
-
-
+        # remove ' min' and other unwanted chars
+        for char in runtime:
+            if not char.isdigit():
+                runtime = runtime.replace(char, '')
         # get stars
         stars = item.findAll("p", {"class": ""})
+        # somehow this method finds one other item so set stars to correct item
         stars = stars[1]
+        # find all names
         stars = stars.findAll("a")
-
-        # make string with all "actors"
+        # make single string with all directors and actors
         actors = ""
         for i in stars:
             actors +=  i.string + ", "
-
+        # bundle movie info in dict
         movie_info = {"Title": title, "Rating": rating, "Year": year, "Actors": actors, "Runtime": runtime}
+        # append to top_50 list
         top_50.append(movie_info)
+    # return list
     return top_50
 
 
@@ -65,10 +71,11 @@ def save_csv(outfile, movies):
     """
     Output a CSV file containing highest rated movies.
     """
+    # open writer file
     writer = csv.writer(outfile)
+    # set first row with collum names
     writer.writerow(['Title', 'Rating', 'Year', 'Actors', 'Runtime'])
-
-
+    # add information to rows
     for movie in movies:
         writer.writerow([movie["Title"], movie["Rating"], movie["Year"], movie["Actors"], movie["Runtime"]])
 
