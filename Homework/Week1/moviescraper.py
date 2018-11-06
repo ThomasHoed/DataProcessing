@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-# Name:
-# Student number:
+# Name: Thomas Hoedeman
+# Student number: 10318070
 """
 This script scrapes IMDB and outputs a CSV file with highest rated movies.
 """
@@ -11,7 +11,7 @@ from requests.exceptions import RequestException
 from contextlib import closing
 from bs4 import BeautifulSoup
 
-TARGET_URL = "https://www.imdb.com/search/title?title_type=feature&release_date=2008-01-01,2018-01-01&num_votes=5000,&sort=user_rating,desc"
+TARGET_URL = "https://www.imdb.com/search/title?title_type=feature&release_date=2008-01-01,2018-01-01&num_votes=500000,&sort=user_rating,desc"
 BACKUP_HTML = 'movies.html'
 OUTPUT_CSV = 'movies.csv'
 
@@ -26,13 +26,28 @@ def extract_movies(dom):
     - Actors/actresses (comma separated if more than one)
     - Runtime (only a number!)
     """
+    items = dom.findAll("div", {"class":"lister-item-content"})
+    top_50 = list()
+    for item in items:
+        title = item.a.string
+        rating = item.strong.string
+        year = item.find("span", {"class": "lister-item-year text-muted unbold"}).string
+        runtime = item.find("span", {"class": "runtime"}).string
 
-    # ADD YOUR CODE HERE TO EXTRACT THE ABOVE INFORMATION ABOUT THE
-    # HIGHEST RATED MOVIES
-    # NOTE: FOR THIS EXERCISE YOU ARE ALLOWED (BUT NOT REQUIRED) TO IGNORE
-    # UNICODE CHARACTERS AND SIMPLY LEAVE THEM OUT OF THE OUTPUT.
 
-    return []   # REPLACE THIS LINE AS WELL IF APPROPRIATE
+
+        stars = item.findAll("p", {"class": ""})
+        stars = stars[1]
+        stars = stars.findAll("a")
+
+        actors = ""
+        for i in stars:
+            actors +=  i.string + ", "
+
+        movie_info = {"Title": title, "Rating": rating, "Year": year, "Actors": actors, "Runtime": runtime}
+        top_50.append(movie_info)
+    return top_50
+
 
 
 def save_csv(outfile, movies):
@@ -41,6 +56,10 @@ def save_csv(outfile, movies):
     """
     writer = csv.writer(outfile)
     writer.writerow(['Title', 'Rating', 'Year', 'Actors', 'Runtime'])
+
+
+    for movie in movies:
+        writer.writerow([movie["Title"], movie["Rating"], movie["Year"], movie["Actors"], movie["Runtime"]])
 
     # ADD SOME CODE OF YOURSELF HERE TO WRITE THE MOVIES TO DISK
 
