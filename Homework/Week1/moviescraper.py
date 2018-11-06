@@ -11,7 +11,7 @@ from requests.exceptions import RequestException
 from contextlib import closing
 from bs4 import BeautifulSoup
 
-TARGET_URL = "https://www.imdb.com/search/title?title_type=feature&release_date=2008-01-01,2018-01-01&num_votes=500000,&sort=user_rating,desc"
+TARGET_URL = "https://www.imdb.com/search/title?title_type=feature&release_date=2008-01-01,2018-01-01&num_votes=5000,&sort=user_rating,desc"
 BACKUP_HTML = 'movies.html'
 OUTPUT_CSV = 'movies.csv'
 
@@ -29,17 +29,27 @@ def extract_movies(dom):
     items = dom.findAll("div", {"class":"lister-item-content"})
     top_50 = list()
     for item in items:
+        # get title
         title = item.a.string
+        # get rating
         rating = item.strong.string
+        # get year (number only)
         year = item.find("span", {"class": "lister-item-year text-muted unbold"}).string
+        # remove extra chars
+        for char in year:
+            if char in '()I ':
+                year = year.replace(char, '')
+
+        # get runtime
         runtime = item.find("span", {"class": "runtime"}).string
 
 
-
+        # get stars
         stars = item.findAll("p", {"class": ""})
         stars = stars[1]
         stars = stars.findAll("a")
 
+        # make string with all "actors"
         actors = ""
         for i in stars:
             actors +=  i.string + ", "
@@ -60,9 +70,6 @@ def save_csv(outfile, movies):
 
     for movie in movies:
         writer.writerow([movie["Title"], movie["Rating"], movie["Year"], movie["Actors"], movie["Runtime"]])
-
-    # ADD SOME CODE OF YOURSELF HERE TO WRITE THE MOVIES TO DISK
-
 
 def simple_get(url):
     """
