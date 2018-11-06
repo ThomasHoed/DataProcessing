@@ -42,6 +42,7 @@ def extract_movies(dom):
 
         # get runtime
         runtime = item.find("span", {"class": "runtime"}).string
+        runtime = runtime.replace(' min', '')
 
 
         # get stars
