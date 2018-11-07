@@ -36,7 +36,7 @@ def extract_movies(dom):
         title = item.a.string
         # get rating
         rating = item.strong.string
-        # get year (number only)
+        # get year
         year = item.find("span", {"class": "lister-item-year text-muted unbold"}).string
         # remove unwanted chars
         for char in year:
@@ -50,14 +50,10 @@ def extract_movies(dom):
                 runtime = runtime.replace(char, '')
         # get stars
         stars = item.findAll("p", {"class": ""})
-        # somehow this method finds one other item so set stars to correct item
-        stars = stars[1]
         # find all names
-        stars = stars.findAll("a")
+        stars = stars[1].findAll("a")
         # make single string with all directors and actors
-        actors = ""
-        for i in stars:
-            actors +=  i.string + ", "
+        actors = ','.join([star.string for star in stars])
         # bundle movie info in dict
         movie_info = {"Title": title, "Rating": rating, "Year": year, "Actors": actors, "Runtime": runtime}
         # append to top_50 list

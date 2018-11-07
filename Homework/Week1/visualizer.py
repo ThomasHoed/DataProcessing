@@ -17,8 +17,8 @@ END_YEAR = 2018
 # global dictionary for the data
 data_dict = {str(key): [] for key in range(START_YEAR, END_YEAR)}
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     # open file
     with open(INPUT_CSV, "r") as csvfile:
         # read file
@@ -37,6 +37,5 @@ if __name__ == "__main__":
     # set x labels to years
     plt.xticks(range(len(data_dict)), list(data_dict.keys()))
     plt.xlabel("Year")
+    plt.title('Average rating IMDB top 50 per year (2008 - 2017)')
     plt.show()
-    # close
-    close(csvfile)
