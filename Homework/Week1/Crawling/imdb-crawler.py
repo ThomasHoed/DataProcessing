@@ -163,11 +163,8 @@ def scrape_top_250(soup):
         IMDB, note that these URLS must be absolute (i.e. include the http
         part, the domain part and the path part).
     """
-
-    items = soup.findAll("td", {"class":"titleColumn"})
-    movie_urls = list()
-    for item in items:
-        movie_urls.append('https://www.imdb.com/' + item.a.get('href'))
+    # creat list of urls based on html code class: title collumn and return 
+    movie_urls = ['https://www.imdb.com/' + item.a.get('href') for item in soup.findAll("td", {"class":"titleColumn"})]
 
     return movie_urls
 
@@ -194,17 +191,17 @@ def scrape_movie_page(dom):
     duration = subtext.time.string.strip()
     # get genre(s)
     genres = subtext.findAll("a")
-    # get genre info
+    # get genre info, join each genre with ';'
     all_genres = ';'.join([genre.string.strip() for genre in genres[:-1]])
     # get info on directors/writers and actors
     info = dom.findAll("div",{"class":"credit_summary_item"})
-    # get Director(s)
+    # get Director(s), join each director with ';', taken from the first item of info
     directors = ';'.join([director.string.strip() for director in info[0].findAll("a") if not 'more credit' in director.string])
-    # get writer(s)
+    # get writer(s) join each writer with ';', taken from the second item of info
     writers = ';'.join([writer.string.strip() for writer in info[1].findAll("a") if not 'more credit' in writer.string])
-    # get stars
+    # get stars, join each star with ';', taken from the third item of info
     stars = ';'.join([star.string.strip() for star in info[2].findAll("a") if not 'See full' in star.string])
-    # get rating
+    # get ratingValue
     rating = dom.find("span", {"itemprop": "ratingValue"}).string
     # get number of ratings
     number_ratings =  dom.find("span", {"itemprop": "ratingCount"}).string
@@ -214,6 +211,3 @@ def scrape_movie_page(dom):
 
 if __name__ == '__main__':
     main()  # call into the progam
-
-    # If you want to test the functions you wrote, you can do that here:
-    # ...
