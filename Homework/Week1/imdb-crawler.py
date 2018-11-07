@@ -163,9 +163,11 @@ def scrape_top_250(soup):
         IMDB, note that these URLS must be absolute (i.e. include the http
         part, the domain part and the path part).
     """
-    movie_urls = []
-    # YOUR SCRAPING CODE GOES HERE, ALL YOU ARE LOOKING FOR ARE THE ABSOLUTE
-    # URLS TO EACH MOVIE'S IMDB PAGE, ADD THOSE TO THE LIST movie_urls.
+
+    items = soup.findAll("td", {"class":"titleColumn"})
+    movie_urls = list()
+    for item in items:
+        movie_urls.append('https://www.imdb.com/' + item.a.get('href'))
 
     return movie_urls
 
@@ -183,10 +185,66 @@ def scrape_movie_page(dom):
         several), actor(s) (semicolon separated if several), rating, number
         of ratings.
     """
-    # YOUR SCRAPING CODE GOES HERE:
-    # Return everything of interest for this movie (all strings as specified
-    # in the docstring of this function).
-    return
+    # header contains title and year
+    title_year = dom.h1.text
+    # initiate
+    year, title = '', ''
+    # parse name and year from string
+    for char in title_year:
+        if char.isdigit():
+            year = year + char
+        elif char not in '()':
+            title = title + char
+
+    # get subtext containing genres and duration
+    subtext = dom.find("div", {"class": "subtext"})
+
+    # get duration
+    duration = subtext.time.string.strip()
+
+    # get genre(s)
+    genres = subtext.findAll("a")
+    # initiate
+    all_genres = ''
+    # loop over genres and create comma separated string, genres[:-1] because release info is also icnluded
+    for genre in genres[:-1]:
+        all_genres += genre.string.strip() + ';'
+    # remove last ';'
+    all_genres= all_genres[0:-1]
+
+
+    info = dom.findAll("div",{"class":"credit_summary_item"})
+    print(info)
+    # get Director(s)
+    directors = ''
+    for a in info[0]:
+        directors += a.string.strip() + ';'
+    print(directors)
+
+
+#             <div class="summary_text">
+#                     Gandalf and Aragorn lead the World of Men against Sauron's army to draw his gaze from Frodo and Sam as they approach Mount Doom with the One Ring.
+#             </div>
+#
+#     <div class="credit_summary_item">
+#         <h4 class="inline">Director:</h4>
+# <a href="/name/nm0001392/?ref_=tt_ov_dr">Peter Jackson</a>    </div>
+#     <div class="credit_summary_item">
+#         <h4 class="inline">Writers:</h4>
+# <a href="/name/nm0866058/?ref_=tt_ov_wr">J.R.R. Tolkien</a> (novel), <a href="/name/nm0909638/?ref_=tt_ov_wr">Fran Walsh</a> (screenplay)            <span class="ghost">|</span>
+# <a href="fullcredits?ref_=tt_ov_wr#writers/">2 more credits</a>&nbsp;»
+#     </div>
+#     <div class="credit_summary_item">
+#         <h4 class="inline">Stars:</h4>
+# <a href="/name/nm0000704/?ref_=tt_ov_st_sm">Elijah Wood</a>, <a href="/name/nm0001557/?ref_=tt_ov_st_sm">Viggo Mortensen</a>, <a href="/name/nm0005212/?ref_=tt_ov_st_sm">Ian McKellen</a>            <span class="ghost">|</span>
+# <a href="fullcredits/?ref_=tt_ov_st_sm">See full cast &amp; crew</a>&nbsp;»
+#     </div>
+
+    # get rating
+    rating = dom.find("span", {"itemprop": "ratingValue"}).string
+    # get number of ratings
+    number_ratings =  dom.find("span", {"itemprop": "ratingCount"}).string
+
 
 
 if __name__ == '__main__':
