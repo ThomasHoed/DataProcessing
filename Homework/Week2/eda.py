@@ -38,58 +38,66 @@ for r, row in enumerate(data):
         elif col.isdigit():
             data[r][c] = float(data[r][c])
 
+
 # set dataframe
 df = DataFrame(data=data[1:-1], columns=data[0])
 
+# set more comprehensive index variables
+countries = df.columns[0]
+regions = df.columns[1]
+pop_density = df.columns[4]
+child_mortality = df.columns[7]
+GDP = df.columns[8]
+
 # remove ' dollars' string and transform to float
-for idx, value in enumerate(df[df.columns[8]]):
+for idx, value in enumerate(df[GDP]):
     # check if not float (only nan's can be a float) so effectively check if not nan
     if not isinstance(value, float):
-            df.loc[idx,(df.columns[8])] = float(value.replace(' dollars', ''))
+            df.loc[idx,(GDP)] = float(value.replace(' dollars', ''))
 
-# remove whitespaces from regions (not needed for assigment but it looks rather chaotic when printing)
-for idx, region in enumerate(df[df.columns[1]]):
-    df.loc[idx, (df.columns[1])] = region.strip()
+# remove whitespaces from regions (not needed for assigment but it looks rather chaotic when printing and not pretty in json file)
+for idx, region in enumerate(df[regions]):
+    df.loc[idx, (regions)] = region.strip()
 
 # get and print Mean (M), standard deviation (STD), Median (MED) and Mode (MODE).
 # header
-print(f"{df.columns[8]}: ")
+print(f"{GDP}: ")
 
 # mean
-M = df[df.columns[8]].mean()
+M = df[GDP].mean()
 print(f'Mean: {round(M, 2)}')
 
 # standard deviation
-STD = df[df.columns[8]].std()
+STD = df[GDP].std()
 print(f'Standard deviation: {round(STD, 2)}')
 
 # median
-MED = df[df.columns[8]].median()
+MED = df[GDP].median()
 print(f'Median: {MED}')
 
 # mode
-MODE = df[df.columns[8]].mode()[0]
+MODE = df[GDP].mode()[0]
 print(f'Mode: {MODE}')
 
-# logical indexing to select data without outliers
-non_outlier = df[df.columns[8]][df[df.columns[8]] - M <= 3 * STD]
+# use logical indexing to select data without outliers
+non_outlier = df[GDP][df[GDP] - M <= 3 * STD]
 
 # plot histogram using logically indexing to only plot data without outliers use max a upper bound range, step 1000
-df[df.columns[8]][df[df.columns[8]] - M <= 3 * STD].plot.hist(range(0, int(non_outlier.max()), 1000))
+non_outlier.plot.hist(range(0, int(non_outlier.max()), 1000))
 plt.xlabel('Gross domestic product (GDP) per capita per year in dollars, (bin range: $1000)')
 plt.ylabel('Number of countries')
 plt.show()
 
-# get five number summary Median, max, min, first quartile and thrid quartile
-MED = df[df.columns[7]].median()
-MAX = df[df.columns[7]].max()
-MIN = df[df.columns[7]].min()
-FQ = df[df.columns[7]].quantile(q=0.25)
-TQ = df[df.columns[7]].quantile(q=0.75)
+# get five number summary: Median, max, min, first quartile and thrid quartile
+MED = df[child_mortality].median()
+MAX = df[child_mortality].max()
+MIN = df[child_mortality].min()
+FQ = df[child_mortality].quantile(q=0.25)
+TQ = df[child_mortality].quantile(q=0.75)
 
 # print five numbers of summary acquired above
 print("")
-print(f"{df.columns[7]}: ")
+print(f"{child_mortality}: ")
 print(f"Median: {MED}")
 print(f"Max: {MAX}")
 print(f"Min: {MIN}")
@@ -97,7 +105,7 @@ print(f"First quartile: {round(FQ,2)}")
 print(f"Thrid quartile: {round(TQ,2)}")
 
 # plot boxplot
-df[df.columns[7]].plot(kind='box')
+df[child_mortality].plot(kind='box')
 plt.show()
 
 # initiate dictionary
@@ -110,14 +118,14 @@ for i in range(len(df)):
     current_country = df.iloc[i]
 
     # get info per country needed for this assigment
-    inner_info = {f'{df.columns[1]}':f'{current_country[df.columns[1]]}',
-                f'{df.columns[4]}': f'{current_country[df.columns[4]]}',
-                f'{df.columns[7]}': f'{current_country[df.columns[7]]}',
-                f'{df.columns[8]}': f'{current_country[df.columns[8]]}'}
-                
+    inner_info = {f'{regions}':f'{current_country[regions]}',
+                f'{pop_density}': f'{current_country[pop_density]}',
+                f'{child_mortality}': f'{current_country[child_mortality]}',
+                f'{GDP}': f'{current_country[GDP]}'}
+
     # add to dictionary with country name as key
-    data[f'{current_country[df.columns[0]]}'] = inner_info
+    data[f'{current_country[countries]}'] = inner_info
 
 # write to json file
 with open('output.json', 'w') as f:
-    json.dump(data, f, sort_keys=True,indent=4)
+    json.dump(data, f,indent=4)
