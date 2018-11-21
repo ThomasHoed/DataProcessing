@@ -67,21 +67,11 @@ for numb, key in enumerate(dict_data, 1):
     del dict
 
 
-# dump into .JSON file with the same name as .csv file 
+# dump into .JSON file with the same name as .csv file
 with open(f'{input_csv[0:-4]}.json', 'w') as f:
-    json.dump(headers, f,indent=4)
+    json.dump(dict_data, f,indent=4)
 
 
-
-
-# data_dict = {str(key[0]) for key in data[1:]}
-# print(data_dict)
-#
-# for line in data:
-#     d = dict()
-#     for header in data[0][1:]:
-#         d[header] = [key for key in line[1:]]
-#     print(d)
 
 
 
