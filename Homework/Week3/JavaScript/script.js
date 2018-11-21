@@ -22,31 +22,35 @@ function main(data){
 
   // middelengebruik over leeftijd, dus Dagelijks roken, zware drinkers Cannabisgebruik en Drugsgebruik
   // 1: "Dagelijkse rokers"
-  info_rokers = GetInfo(data["Dagelijkse rokers"]);
+  info_rokers = GetInfo(data, "Dagelijkse rokers");
   // 5: "Zware drinkers"
-  info_drinkers = GetInfo(data["Zware drinkers"]);
+  info_drinkers = GetInfo(data, "Zware drinkers");
   // 7: "Cannabisgebruik afgelopen jaar"
-  info_blowers = GetInfo(data["Cannabisgebruik afgelopen jaar"]);
+  info_blowers = GetInfo(data, "Cannabisgebruik afgelopen jaar");
   // 8: "Drugsgebruik afgelopen jaar"
-  info_druggies = GetInfo(data["Drugsgebruik afgelopen jaar"]);
+  info_druggies = GetInfo(data, "Drugsgebruik afgelopen jaar");
 
-  display(info_rokers[1])
-  // display(info_drinkers[1])
-  // display(info_blowers[1])
-  // display(info_druggies[1])
+  // Rokers
+  display(info_rokers, 'green')
+
+  // display(info_drinkers, 'red')
+  // display(info_blowers 'blue'
+  // display(info_druggies,'yellow' )
 
 
 }
 
-function display(array){
+function display(info, color_hex){
   // Change to edit size of graph
   y_min = 500
   y_max = 100
   x_min = 200
   x_max = 1000
+  array = info[0]
+  key_names = info[1]
 
   // get transform function for y axis
-  y_domain = [-5, Math.max(...array) * 1.2];
+  y_domain = [-0.1, Math.max(...array) * 1.2];
   y_range = [y_min, y_max];
   transform_y = createTransform(y_domain, y_range);
 
@@ -67,15 +71,30 @@ function display(array){
     console.log(array[i]);
     current_point_y = transform_y(array[i]);
     ctx.lineTo(transform_x(i), current_point_y);
+    ctx.strokeStyle = color_hex
     ctx.stroke();
   }
 
-  ctx.font = "15px Arial";
-  ctx.fillText("0 - 4 Jaar", transform_x(0), transform_y(-8));
-  ctx.Align = "end"
-  ctx.font = "15px Arial";
-  ctx.fillText("4 - 8 Jaar", transform_x(1), transform_y(-8));
-  ctx.Align = "end"
+  // print x labels
+  for(i = 0; i < key_names.length; i++){
+    ctx.font = "12px Arial"
+    ctx.fillText(key_names[i], transform_x(i) -25, transform_y(-4))
+    ctx.beginPath()
+    ctx.moveTo(transform_x(i), y_min )
+    ctx.lineTo(transform_x(i), y_min + 10 )
+    ctx.strokeStyle = 'black'
+    ctx.stroke()
+  }
+
+  // print y labels
+  for(i = 0; i < y_domain[1]; i++){
+    console.log(i);
+    ctx.font = "12px Arial"
+    ctx.fillText(i, x_min -25, transform_y(i))
+    ctx.moveTo(x_min, transform_y(i))
+    ctx.lineTo(x_min + 10, transform_y(i))
+    ctx.stroke()
+  }
 
 
 
@@ -98,22 +117,32 @@ function display(array){
 
 // GetInfo function takes a dictionary of a certain category and selects the total percentage
 // and the age information, returns an array
-GetInfo = function(dictionary){
+GetInfo = function(data, key){
+  dictionary = data[key]
   keys = Object.keys(dictionary);
-  totaal = dictionary["Totaal"];
+  output_dict = []
+  output_dict["Totaal"] = dictionary["Totaal"];
+  output_dict["Categorie naam"] = key
+  values = []
+  key_names = []
 
-  leeftijden = []
+
   for(i = 0; i < keys.length; i++){
     if(keys[i].includes("jaar") ){
       if(dictionary[keys[i]] != 'NULL'){
-      leeftijden.push(dictionary[keys[i]]);
+        output_dict[keys[i]] = dictionary[keys[i]]
+        values.push(dictionary[keys[i]])
+        key_names.push(keys[i])
+
       }
       else {
-        leeftijden.push(0)
+        output_dict[keys[i]] = 0
+        values.push(0)
+        key_names.push(keys[i])
       }
     }
   }
-  return [totaal, leeftijden];
+  return [values, key_names];
 }
 
 function createTransform(domain, range){
