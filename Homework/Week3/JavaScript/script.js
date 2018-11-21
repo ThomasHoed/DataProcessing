@@ -1,5 +1,7 @@
 /*
-script that plots a graph based on txt inputfile 
+name: Thomas Hoedeman
+studentnumebr 10318070
+script that plots a graph in a html canvas based on .txt inputfile
 */
 
 // load data
@@ -24,7 +26,7 @@ function main(data){
   var info = GetInfo(data);
 
   // canvas size
-  var y_min = 600;
+  var y_min = 580;
   var y_max = 80;
   var x_min = 50;
   var x_max = 1150;
@@ -54,7 +56,8 @@ function draw(array, color_hex, ctx){
   }
 }
 
-// display creates a canvas and plots information from the first 3 input arrays with the last araay as x labels
+// display creates a canvas and plots information from the first 3 input arrays
+// with the last array as x labels
 function display(info, x_min, x_max, y_min, y_max, colors, labels){
   key_names = info[3];
 
@@ -93,6 +96,7 @@ function display(info, x_min, x_max, y_min, y_max, colors, labels){
     ctx.strokeStyle = 'black'
     ctx.stroke()
   }
+
   // 2018 label (not in array)
   ctx.fillText(String(parseInt(key_names[i-1][0])+1), transform_x(i-1), transform_y(-2))
 
@@ -127,11 +131,9 @@ function display(info, x_min, x_max, y_min, y_max, colors, labels){
   ctx.lineWidth = 3;
   ctx.stroke();
 
-
   // graph title
   ctx.font = "30px Arial";
-  ctx.fillText("Average, minimum and maximum temperature at the Bilt, Netherlands (2008 - 2018)",x_min * 1.4, y_max * 0.7);
-
+  ctx.fillText("Average, minimum and maximum temperature at De Bilt, Netherlands (2008 - 2018)",x_min * 1.4, y_max * 0.7);
 
   // graph legend info
   var legend_x = transform_x(94);
@@ -205,7 +207,6 @@ function createTransform(domain, range){
 	// this gives you two equations to solve:
 	// range_min = alpha * domain_min + beta
 	// range_max = alpha * domain_max + beta
- 		// a solution would be:
 
     var domain_min = domain[0];
     var domain_max = domain[1];

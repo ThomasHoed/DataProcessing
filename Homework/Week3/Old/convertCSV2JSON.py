@@ -70,20 +70,3 @@ for numb, key in enumerate(dict_data, 1):
 # dump into .JSON file with the same name as .csv file
 with open(f'{input_csv[0:-4]}.json', 'w') as f:
     json.dump(dict_data, f,indent=4)
-
-
-
-
-
-
-
-# converts a csv file to a JSON file
-
-
-# input dlg for CSV file
-
-# parse CSV data into python object
-
-# convert object to JSON object
-
-# save JSOn file
