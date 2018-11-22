@@ -10,7 +10,7 @@ d3.select("body").append("title").text("Assigments");
 
 
 // paragraph
-d3.select("body").append('h4').text("Links to website assigments:")
+d3.select("body").append('h4').text("Links to assigments:")
 d3.select("body").append('a').attr("href", "https://thomashoed.github.io/DataProcessing/Homework/Week3/index.html").text("Week 3")
 
 // footer
