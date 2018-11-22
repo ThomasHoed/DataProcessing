@@ -11,11 +11,61 @@ d3.select("body").append("title").text("My bar chart");
 
 // load .JSON
 d3.json("/Data/gezondheid_nederland_2017.json").then(function(data) {
-    // console.log(error);
-    console.log(data)
+
+    // parse age information from data
+    var leeftijd_info = get_leeftijd_info(data)
+
+    // get xlabels
+    var outer_keys = Object.keys(data);
+    xlabels = Object.keys(data[outer_keys[0]]);
+
+    var body = d3.select('body');
+    var ol = body.append('ol');
+    ol.selectAll('li')
+    .data(d3.entries(leeftijd_info['Rokers']))
+    .enter()
+    .append('li')
+    .text(d => d.value);
+
+    //
+
 
 });
 
+function get_leeftijd_info(data){
+
+  // Get all keys
+  var outer_keys = Object.keys(data);
+  var inner_keys = Object.keys(data[outer_keys[0]]);
+
+  // output dict
+  leeftijd_data = {};
+
+  // loop over outer objects
+  for (var key of outer_keys) {
+
+    // get inner object
+    var inner_data = data[key];
+
+    // initiate
+    var dict = {};
+
+    // loop over inner object and get leeftijd values and add them to dict, tranform NULL to 0
+    for (var s_key of inner_keys){
+      if(s_key.includes("jaar")){
+        var value = inner_data[s_key];
+
+        // transform Null to 0
+        if(value == 'NULL'){
+          value = 0;
+        }
+        dict[s_key] = value;
+      }
+    }
+    leeftijd_data[key] = dict;
+  }
+  return leeftijd_data
+}
 
 
 // paragraph
