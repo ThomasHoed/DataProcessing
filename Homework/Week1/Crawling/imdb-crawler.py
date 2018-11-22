@@ -163,7 +163,7 @@ def scrape_top_250(soup):
         IMDB, note that these URLS must be absolute (i.e. include the http
         part, the domain part and the path part).
     """
-    # creat list of urls based on html code class: title collumn and return 
+    # creat list of urls based on html code class: title collumn and return
     movie_urls = ['https://www.imdb.com/' + item.a.get('href') for item in soup.findAll("td", {"class":"titleColumn"})]
 
     return movie_urls

@@ -149,6 +149,11 @@ function display(info, x_min, x_max, y_min, y_max, colors, labels){
   ctx.fillText('temperature', x_min * 0.01, y_max * 0.9);
   ctx.font = "15px Arial";
   ctx.fillText('year', transform_x(x_domain[1]/2.2), transform_y(-3));
+
+  // name and credits
+  ctx.font = "10px Arial";
+  ctx.fillText('Thomas Hoedeman, 10318070', x_range[0] * 1.1 , y_range[0] + 15)
+  ctx.fillText('source data: http://projects.knmi.nl/klimatologie/daggegevens/selectie.cgi', x_range[1] / 1.35, y_range[0] + 15)
 }
 
 
