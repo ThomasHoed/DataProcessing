@@ -15,4 +15,3 @@ d3.select("body").append('p').attr("href", "https://thomashoed.github.io/DataPro
 
 // footer
 d3.select("html").append("footer").append("p").attr("class","small text-center text-muted").text("Thomas Hoedeman, 10318070")
-d3.select("footer").append("p").attr("id", "source").text("Source: ")
