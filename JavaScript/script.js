@@ -11,7 +11,7 @@ d3.select("body").append("title").text("Assigments");
 
 // paragraph
 d3.select("body").append('h4').text("Links to website assigments:")
-d3.select("body").append('p').attr("href", "https://thomashoed.github.io/DataProcessing/Homework/Week3/index.html").text("Week 4")
+d3.select("body").append('a').attr("href", "https://thomashoed.github.io/DataProcessing/Homework/Week3/index.html").text("Week 4")
 
 // footer
-d3.select("html").append("footer").append("a").attr("class","small text-center text-muted").text("Thomas Hoedeman, 10318070")
+d3.select("html").append("footer").append("p").attr("class","small text-center text-muted").text("Thomas Hoedeman, 10318070")
