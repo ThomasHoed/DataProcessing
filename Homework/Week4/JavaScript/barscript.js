@@ -11,7 +11,7 @@ window.onload = function()
 
 
     // load .JSON
-    d3.json("gezondheid_nederland_2017.json").then(function(data) {
+    d3.json("https://raw.githubusercontent.com/ThomasHoed/DataProcessing/master/Homework/Week4/Data/gezondheid_nederland_2017.json").then(function(data) {
         console.log(data)
         console.log("x")
         // parse age information and xlabels from data
