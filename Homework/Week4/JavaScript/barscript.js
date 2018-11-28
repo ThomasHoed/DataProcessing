@@ -33,8 +33,8 @@ function make_bar_graph(data, color, title, xlabels){
 
     // set margins, for margin idea source: https://bl.ocks.org/d3noob/23e42c8f67210ac6c678db2cd07a747e
     var margin = {top: 100, right: 20, bottom: 30, left: 40},
-        w = 960 - margin.left - margin.right,
-        h = 500 - margin.top - margin.bottom;
+        w = 1060 - margin.left - margin.right,
+        h = 600 - margin.top - margin.bottom;
     var barPadding = 2;
 
     // Make svg
@@ -76,7 +76,7 @@ function make_bar_graph(data, color, title, xlabels){
     // Add title
     svg.append("text")
         .text(title + " (%)")
-        .attr("x", 460)
+        .attr("x", w/2)
         .attr("y", 20)
         .attr("font-family", "sans-serif").attr("font-size", "25px").attr("fill", "black").attr("text-anchor", "middle");
 
@@ -152,8 +152,8 @@ function get_xlabels(data){
 
 
 // paragraph
-d3.select("body").append('h4').text("Description of my dataset and visualization:")
-d3.select("body").append('p').text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
+d3.select("body").append('h4').text("Description:")
+d3.select("body").append('p').text("Substance use can be harmfull for personal health and can cost society a lot of money. Below bar graphs display the distrubtion of harmfull behaviour across different age groups")
 
 
 // footer
