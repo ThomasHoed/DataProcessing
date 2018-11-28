@@ -5,49 +5,57 @@ barscript
 */
 window.onload = function()
 {
-    // Title head and body
+    // Title head
     d3.select("head").append("title").text("Bar chart view");
-    d3.select("body").append("title").text("My bar chart");
-
 
     // load .JSON
     d3.json("https://raw.githubusercontent.com/ThomasHoed/DataProcessing/master/Homework/Week4/Data/gezondheid_nederland_2017.json").then(function(data) {
-        console.log(data)
-        console.log("x")
+
         // parse age information and xlabels from data
         var leeftijd_info = get_leeftijd_info(data)
         var xlabels = get_xlabels(data)
 
         // selection keys and colors
         var selection_keys = ["Dagelijkse rokers", "Zware drinkers", "Cannabisgebruik afgelopen jaar", "Drugsgebruik afgelopen jaar"]
+        var beschrijvingen = ["Dagelijkse rokers: Het percentage van de bevolking van 12 jaar of ouder met antwoordcategorie ja op de vraag: Rookt u elke dag?",
+                              "Zware drinkers: het percentage van de bevolking van 12 jaar of ouder dat minstens 1 keer per week 6 of meer glazen alcohol op één dag drinkt (mannen) of minstens 1 keer per week 4 of meer glazen alcohol op één dag drinkt (vrouwen).",
+                              "Cannabisgebruik: Op basis van de vraag naar het gebruik van cannabis (hasj, wiet, marihuana)",
+                              "Drugsgebruik anders dan cannabis: Op basis van de vragen naar het gebruik van: amfetamine, XTC, cocaine, LSD,  paddo's,  heroine, GHB, methadon of andere drugs, Het gaat om het gebruik van 1 of meer van deze drugssoorten. Bij gebruik van meerdere van deze drugssoorten wordt de meest recent gebruikte drugssoort als bepalend gezien voor de verdeling over de categorieën afgelopen maand, afgelopen jaar, en ooit."]
         var colors = ["#095e5c", "#cea40e", "#2a6818", "#890404"]
 
         // plot all bar graphs
         for(i = 0; i < selection_keys.length; i++){
-            make_bar_graph(leeftijd_info[selection_keys[i]], colors[i], selection_keys[i], xlabels);
+            make_bar_graph(leeftijd_info[selection_keys[i]], colors[i], selection_keys[i], xlabels, beschrijvingen[i]);
         };
 
-        });
+    });
 
 
-    function make_bar_graph(data, color, title, xlabels){
+    function make_bar_graph(data, color, title, xlabels, beschrijving){
+
+        // spacing
+        d3.select("body").append('p').html("<br>")
+        d3.select("body").append('p').text(beschrijving)
+        d3.select("body").append('p').html("<br>")
 
         // set margins, for margin idea source: https://bl.ocks.org/d3noob/23e42c8f67210ac6c678db2cd07a747e
-        var margin = {top: 100, right: 20, bottom: 30, left: 40},
-            w = 1060 - margin.left - margin.right,
-            h = 600 - margin.top - margin.bottom;
+        var margin = {top: 50, right: 20, bottom: 50, left: 40},
+            w = 1100 - margin.left - margin.right,
+            h = 500 - margin.top - margin.bottom;
         var barPadding = 2;
 
         // Make svg
         var svg = d3.select("body")
             .append("svg")
             .attr("width", w + margin.left + margin.right)
-            .attr("height", h + margin.top + margin.bottom);
+            .attr("height", h + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         // scales
         var yscale = d3.scaleLinear()
             .range([h, 5])
-            .domain([0, 30])
+            .domain([0, 25])
 
         var xscale = d3.scaleBand()
             .domain(xlabels)
@@ -78,12 +86,25 @@ window.onload = function()
         svg.append("text")
             .text(title + " (%)")
             .attr("x", w/2)
-            .attr("y", 20)
-            .attr("font-family", "sans-serif").attr("font-size", "25px").attr("fill", "black").attr("text-anchor", "middle");
+            .attr("y", -margin.top/2)
+            .attr("font-family", "sans-serif").attr("font-weight","bold").attr("font-size", "22px").attr("fill", "black").attr("text-anchor", "middle")
+
+        // axis labels
+        svg.append("text")
+            .text("percentage")
+            .attr("y", -margin.left)
+            .style("text-anchor", "end")
+            .attr("dy", ".71em")
+            .attr("transform", "rotate(-90)");
+        svg.append("text")
+            .text("leeftijdsgroep")
+            .attr("y", h + margin.bottom -  margin.bottom / 4)
+            .attr("x", w / 2 )
+            .style("text-anchor", "middle")
 
 
         // axis
-        var yaxis = d3.axisRight(yscale)
+        var yaxis = d3.axisLeft(yscale)
             .ticks(5);
 
         svg.append("g")
@@ -153,14 +174,13 @@ window.onload = function()
 
 
     // paragraph
-    d3.select("body").append('h4').text("Description:")
-    d3.select("body").append('p').text("Substance use can be harmfull for personal health and can cost society a lot of money. Below bar graphs display the distrubtion of harmfull behaviour across different age groups")
-
+    d3.select("body").append('h4').text("Beschrijving:")
+    d3.select("body").append('p').html("Middelen gebruik kan schadelijk zijn voor de gezondheid en kan veel geld kosten veroorzaken voor de maatschappij, hieronder zijn staafgrafieken weergegeven met de verdeling van het gebruik van verschillende middelen onder de bevolking")
 
     // footer
     d3.select("html").append("footer").append("p").attr("class","small text-center text-muted").text("Thomas Hoedeman, 10318070")
     d3.select("footer").append("source").attr("id", "source").text("Source: \n")
-    d3.select("#source").append("a").attr("href", "https://opendata.cbs.nl/statline/#/CBS/nl/dataset/83021NED/table?ts=1542643355996").text("CBS")
+    d3.select("#source").append("a").attr("href", "https://opendata.cbs.nl/statline/#/CBS/nl/dataset/83021NED/table?ts=1542643355996").html("CBS")
     d3.select("footer").append("p").text("")
 
 }
