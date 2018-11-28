@@ -11,8 +11,9 @@ d3.select("body").append("title").text("My bar chart");
 
 
 // load .JSON
-d3.json("/Data/gezondheid_nederland_2017.json").then(function(data) {
-
+d3.json("https://github.com/ThomasHoed/DataProcessing/blob/master/Homework/Week4/Data/gezondheid_nederland_2017.json").then(function(data) {
+    console.log(data)
+    console.log("x")
     // parse age information and xlabels from data
     var leeftijd_info = get_leeftijd_info(data)
     var xlabels = get_xlabels(data)
