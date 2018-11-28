@@ -175,7 +175,7 @@ window.onload = function()
 
     // paragraph
     d3.select("body").append('h4').text("Beschrijving:")
-    d3.select("body").append('p').html("Middelen gebruik kan schadelijk zijn voor de gezondheid en kan veel geld kosten veroorzaken voor de maatschappij, hieronder zijn staafgrafieken weergegeven met de verdeling van het gebruik van verschillende middelen onder de bevolking")
+    d3.select("body").append('p').html("Middelengebruik kan schadelijk zijn voor de gezondheid en kan veel kosten veroorzaken voor de maatschappij, hieronder zijn staafgrafieken weergegeven met de verdeling van het gebruik van verschillende middelen onder de bevolking")
 
     // footer
     d3.select("html").append("footer").append("p").attr("class","small text-center text-muted").text("Thomas Hoedeman, 10318070")
