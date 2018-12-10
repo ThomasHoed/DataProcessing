@@ -68,7 +68,3 @@ for data in dataSets:
 # dump into .JSON file with the same name as .csv file
 with open(f'Combination_{inputPaths[0][:-4]}_&_{inputPaths[1][:-4]}.json', 'w') as f:
     json.dump(outputJSON, f,indent=4)
-
-
-
-print("end")
