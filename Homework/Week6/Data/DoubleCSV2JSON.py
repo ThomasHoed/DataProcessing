@@ -63,7 +63,12 @@ for data in dataSets:
         if current_country in selected_countries:
             for idx, column in enumerate(row):
                 if headers[idx] != "Country" and "Region":
-                    outputJSON[current_country][headers[idx]] = column
+
+                    numb = ''.join([char for char in column if char.isdigit() or char == '.'])
+                    if not numb:
+                        outputJSON[current_country][headers[idx]] = column
+                    else:
+                        outputJSON[current_country][headers[idx]] = numb
 
 # dump into .JSON file with the same name as .csv file
 with open(f'Combination_{inputPaths[0][:-4]}_&_{inputPaths[1][:-4]}.json', 'w') as f:
