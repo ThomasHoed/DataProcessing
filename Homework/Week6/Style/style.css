@@ -38,24 +38,33 @@ html{
   left: 0;
 }
 
+
+
 svg {
-  display:block;
   position: absolute;
-  top: 0px;
-  left: 375px;
-  width: 900px;
+  top: -5px;
+  left: 250px;
 }
 
 footer{
     position: absolute;
-    bottom: -150px;
-    left: 550px;
+    bottom: -200px;
+    left: 600px;
     padding-bottom: 35px;
+}
+
+#piechart{
+    position: absolute;
+    bottom: 230px;
+    left: -345px;
+    align-self: left;
+
 }
 #menu {
     position: absolute;
-    font-size: 18px;
+    font-size: 15px;
     text-align: left;
+    top: 0px;
     left: -30px;
 
 }
