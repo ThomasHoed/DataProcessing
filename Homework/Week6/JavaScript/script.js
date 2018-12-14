@@ -42,105 +42,10 @@ window.onload = function(){
         return scatterData
     }
 
-    function getPieData(data){
-
-        output = {};
-        var names = ["Economy", "Family", "Life Expectancy", "Freedom", "Government Corruption", "Generosity", "Dystopia Residual","Happiness Score", "Happiness Rank"];
-        var values = [];
-        for(i = 0; i < names.length; i++){
-
-            values.push(data[names[i]]);
-        }
-        output["values"] = values
-        output["names"] = names
-
-        return output
-    }
-
-    function makePieChart(data, country){
-
-        var country_data = data[country];
-        //  source: https://bl.ocks.org/adamjanes/53eedf0b915fd8b20f04fd08bc24ff00  & https://github.com/kthotav/D3Visualizations/blob/master/Pie_Charts/js/pie.js
-
-        var margin =  {top: 50, bottom: 50, left: 50, right: 50 }
-        var width = 560,
-            height = 280,
-            radius = Math.min(width, height) / 2;
-
-        var color = d3.scaleOrdinal()
-            .range(['#b35806','#f1a340','#fee0b6','#d8daeb','#998ec3','#542788']);
-
-        var pie = d3.pie()
-            .value(function(d) { return d; })
-            .sort(null);
-
-
-        var arc = d3.arc()
-            .innerRadius(radius - 50)
-            .outerRadius(radius - 10);
-
-        var labelArc = d3.arc()
-            .outerRadius(radius - 40)
-            .innerRadius(radius - 40);
-
-
-        var svgPie = d3.select("#piechart").append("svg")
-            .attr("width", width +  margin.left + margin.right)
-            .attr("height", height +  margin.top + margin.bottom )
-            .append("g")
-            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-
-        var all_data = getPieData(country_data)
-
-        var piedata =  all_data.values.slice(0,6)
-        var pieLabels =  all_data.names.slice(0,6)
-
-        var path = svgPie.datum(piedata).selectAll("path")
-                .data(pie)
-                .attr("class", "pie")
-                .enter().append("path")
-                .style("stroke", "black")
-                .attr("fill", function(d, i) { return color(i); })
-                .attr("d", arc)
-                .each(function(d) { this._current = d; })
-                .on("mouseover", function(d, i){
-                    svgPie.selectAll('text').html(function(){
-                        return  all_data.names[i] + ': ' + Math.round(all_data.values[i]*100)/100;
-                        });
-                })
-                .on("mouseout", function(d, i){svgPie.selectAll('text').html(country)});
-
-        svgPie.append("text")
-            .attr("transform", function(d) {
-            var _d = arc.centroid(d);
-            _d[0] *= 1.5;	//multiply by a constant factor
-            _d[1] *= 1.5;	//multiply by a constant factor
-            return "translate(" + _d + ")";
-            })
-            .attr("dy", ".50em")
-            .attr("stroke-width", 15)
-            .style("text-anchor", "middle")
-            .html(country);
-    }
-
-    function updatePie(data, country){
-        var country_data = data[country];
-        var all_data = getPieData(country_data)
-        var piedata =  all_data.values.slice(0,6)
-        var pieLabels =  all_data.names.slice(0,6)
-        console.log(pie);
-        var pie = d3.pie()
-            .value(function(d) { return d; })
-            .sort(null);
-
-        d3.selectAll('#piechart').selectAll('g').datum(piedata).selectAll("path").data(pie);
-        log
-
-    }
-
     function makeScatterPlot(input_data){
         country = "Netherlands"
-        makePieChart(input_data, country)
+
+        svgPie = makePieChart(input_data, country, svg)
 
         factor1 = "Happiness Score"
         factor2 = "Happy Planet Index"
@@ -173,7 +78,8 @@ window.onload = function(){
             .style('opacity', .90)
             .attr('stroke-width', 5)
 
-        drawDots(data, svg, xScale, yScale, popScale, input_data, factor1, factor2);
+        drawDots(data, svg, xScale, yScale, popScale, input_data, factor1, factor2, svgPie);
+
 
         makeAxis(xScale, yScale, margin, svg, data[1]);
 
@@ -186,6 +92,200 @@ window.onload = function(){
 
         // headers = getHeaders(input_data)
         makeMenu(input_data, svg)
+    }
+
+    function getPieData(data){
+
+        output = {};
+        var names = ["Economy", "Family", "Life Expectancy", "Freedom", "Government Corruption", "Generosity", "Dystopia Residual","Happiness Score", "Happiness Rank"];
+        var values = [];
+        for(i = 0; i < names.length; i++){
+
+            values.push(data[names[i]]);
+        }
+        output["values"] = values
+        output["names"] = names
+
+        return output
+    }
+
+    function makePieChart(data, country, svg){
+
+        var country_data = data[country];
+        //  source: https://bl.ocks.org/adamjanes/53eedf0b915fd8b20f04fd08bc24ff00  & https://github.com/kthotav/D3Visualizations/blob/master/Pie_Charts/js/pie.js
+
+        var margin =  {top: 10, bottom: 0, left: 10, right: 50 }
+        var width = 300,
+            height = 325,
+            radius = Math.min(width, height)/2;
+
+        var color = d3.scaleOrdinal()
+            .range(['#b35806','#f1a340','#fee0b6','#d8daeb','#998ec3','#542788']);
+
+        var mouseoverColor = "#890606"
+        var barColor = "#1d1e1e"
+
+        var pie = d3.pie()
+            .value(function(d) { return d; })
+            .sort(null);
+
+
+        var arc = d3.arc()
+            .innerRadius(radius - 50)
+            .outerRadius(radius - 10);
+
+        var labelArc = d3.arc()
+            .outerRadius(radius - 40)
+            .innerRadius(radius - 40);
+
+
+        var svgPie = d3.select("#piechart").append("svg")
+            .attr("width", width +  margin.left + margin.right)
+            .attr("height", height +  margin.top + margin.bottom )
+            .append("g")
+            .attr("transform", "translate(" + width / 2 + "," + height /1.75 + ")");
+
+        var all_data = getPieData(country_data)
+
+        var piedata =  all_data.values.slice(0,6)
+        var pieLabels =  all_data.names.slice(0,6)
+
+        var path = svgPie.datum(piedata).selectAll("path")
+                .data(pie)
+                .attr("class", "pie")
+                .enter().append("path")
+                .style("stroke", "#a1e29c")
+                .style("stroke-width", "8")
+                .attr("fill", function(d, i) { return color(i); })
+                .attr("d", arc)
+                .each(function(d) { this._current = d; })
+                .on("mouseover", function(d, i){
+                    d3.select(this).style('fill', mouseoverColor)
+                    svgPie.selectAll('.info').html(function(){
+                        return  all_data.names[i];
+                        });
+                    svgPie.selectAll('.number').html(function(){
+                        return  Math.round(all_data.values[i]*100)/100;
+                        });
+                })
+                .on("mouseout", function(){
+                    d3.select(this).style("fill", function(d, i) {
+                        return color(d.index); })
+                    svgPie.selectAll('.info').html(country)
+                    svgPie.selectAll('.number').html("")
+                });
+
+        svgPie.append("text")
+            .attr("class", "info")
+            .text(country)
+            .attr("font-weight","bold").attr("font-size", "22px").attr("text-anchor", "middle");
+
+        svgPie.append("text")
+            .attr("class", "number")
+            .text("")
+            .attr("transform", "translate(0, "+ radius /4+")")
+            .attr("font-weight","bold").attr("font-size", "22px").attr("text-anchor", "middle");
+
+
+        svgPie.append("text")
+            .attr("class", "title")
+            .attr("transform", "translate("+margin.left*3+", "+ -radius +")")
+            .text("Composition Happiness Score")
+            .attr("font-weight","bold").attr("font-size", "22px").attr("text-anchor", "middle");
+
+        rect = svgPie.selectAll('rect')
+            .data([all_data.values[6]])
+            .enter().append("rect")
+            .attr("class", "bar")
+            .attr("x", 150)
+            .attr("y", function(d){return radius - d*75})
+            .attr("width",  35)
+            .attr("height", function(d) {return d*75;})
+            .style("fill", barColor)
+            .style("stroke", "black")
+            .style("stoke-width", "10")
+            .on("mouseover", function(d){
+                d3.selectAll('rect').style('fill', mouseoverColor)
+                svgPie.selectAll('.info').html(function(){
+                return  all_data.names[6];
+                })
+                svgPie.selectAll('.number').html(function(){
+                return  Math.round(all_data.values[6]*100)/100;
+                })
+            })
+            .on("mouseout", function(){
+                d3.selectAll('rect').style('fill', barColor)
+                svgPie.selectAll('.info').html(country)
+                svgPie.selectAll('.number').html("")
+            });
+
+        rect.transition().duration(1500)
+
+
+
+        return svgPie
+    }
+
+    function updatePie(data, country, svgPie){
+        var country_data = data[country];
+        var all_data = getPieData(country_data)
+        var piedata =  all_data.values.slice(0,6)
+        var pieLabels =  all_data.names.slice(0,6)
+        var width = 300,
+            height = 300,
+            radius = Math.min(width, height)/2;
+        var pie = d3.pie()
+            .value(function(d) { return d; })
+            .sort(null);
+        var color = d3.scaleOrdinal()
+            .range(['#b35806','#f1a340','#fee0b6','#d8daeb','#998ec3','#542788']);
+        var mouseoverColor = "#890606"
+        var barColor = "#1d1e1e"
+
+        var arc = d3.arc()
+            .innerRadius(radius - 50)
+            .outerRadius(radius - 10);
+
+        svgPie.selectAll('.info').html(country)
+
+        var paths = d3.selectAll('#piechart').datum(piedata).selectAll("path")
+                .data(pie)
+                .on("mouseover", function(d, i){
+                    d3.select(this).style("fill", mouseoverColor)
+                    svgPie.selectAll('.info').html(function(){
+                        return  all_data.names[i];
+                        });
+                    svgPie.selectAll('.number').html(function(){
+                        return  Math.round(all_data.values[i]*100)/100;
+                        });
+                })
+                .on("mouseout", function(d, i){
+                    console.log(i);
+                    console.log(color(i));
+                    console.log(d.index);
+                    d3.select(this).style("fill", function(){return color(i)})
+                    svgPie.selectAll('.info').html(country)
+                    svgPie.selectAll('.number').html('')
+                });
+        paths.transition().duration(1000).each(function(d) { this._current = d; }).attr("d", arc)
+
+        rect = d3.selectAll("rect").data([all_data.values[6]])
+            .on("mouseover", function(d){
+                d3.selectAll('rect').style('fill', mouseoverColor)
+                svgPie.selectAll('.info').html(function(){
+                return  all_data.names[6];
+                })
+                svgPie.selectAll('.number').html(function(){
+                return  Math.round(all_data.values[6]*100)/100;
+                })
+            })
+            .on("mouseout", function(){
+                d3.selectAll('rect').style('fill', barColor)
+                svgPie.selectAll('.info').html(country)
+                svgPie.selectAll('.number').html('')
+            });
+
+        rect.transition().duration(1500).attr("y", function(d){return radius - d*75}).attr("height", function(d) {return d*75})
     }
 
     function makeScales(data){
@@ -239,9 +339,9 @@ window.onload = function(){
     }
 
     function getMargins(){
-        var margins = {top: 40, right: 150, bottom: 40, left: 60};
+        var margins = {top: 40, right: 150, bottom: 30, left: 60};
         margins.w = 900;
-        margins.h = 590;
+        margins.h = 570;
         margins.r = Math.min(margins.w, margins.h) / 2;
         return margins
     }
@@ -273,7 +373,7 @@ window.onload = function(){
              .on('mouseover', tip.show)
              .on('mouseout', tip.hide)
              .on('click', function(d){
-                 updatePie(input_data, d[2])
+                 updatePie(input_data, d[2], svgPie)
              });
     }
 
@@ -295,7 +395,7 @@ window.onload = function(){
             .attr("class", "yAxis")
             .attr("transform", "translate("+(margin.left -5)+", 0)")
             .attr("stroke-width", 2)
-            .call(d3.axisLeft(yScale))
+            .call(d3.axisRight(yScale))
             .attr("font-family", "sans-serif").attr("font-size", "12px");
 
         // ylabel
@@ -318,7 +418,7 @@ window.onload = function(){
         // xlabel
         svg.append("text")
             .text(data[5])
-            .attr("y", margin.h)
+            .attr("y", margin.h + 5 )
             .attr("x", (margin.w - margin.left - margin.right)/2)
             .style("text-anchor", "start");
 
@@ -481,7 +581,7 @@ window.onload = function(){
         d3.selectAll(".yAxis")
             .transition()
             .duration(1500)
-            .call(d3.axisLeft(yScale));
+            .call(d3.axisRight(yScale));
 
         let coords = regressionCoords(dat, svg, xScale, yScale)
 

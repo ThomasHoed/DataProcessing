@@ -4,7 +4,7 @@ Thomas Hoedeman
 scatter.css
 */
 html{
-  font-family:"lucida console";
+  font-family:"Helvetica";
   text-align:center;
   background-color: #a1e29c
 }
@@ -48,23 +48,24 @@ svg {
 
 footer{
     position: absolute;
-    bottom: -200px;
-    left: 600px;
-    padding-bottom: 35px;
+    bottom: 00px;
+    left: 1100px;
+    padding-bottom: 15px;
 }
 
 #piechart{
     position: absolute;
-    bottom: 230px;
-    left: -345px;
+    bottom: 315px;
+    left: -250px;
     align-self: left;
 
 }
 #menu {
     position: absolute;
-    font-size: 15px;
+    font-size: 16px;
+    font-style: bold;
     text-align: left;
-    top: 0px;
+    top: -10px;
     left: -30px;
 
 }
