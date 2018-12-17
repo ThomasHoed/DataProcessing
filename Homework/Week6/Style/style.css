@@ -1,7 +1,8 @@
 /*
 Thomas Hoedeman
 10318070
-scatter.css
+style.css
+for linked views assigment
 */
 html{
   font-family:"Helvetica";
@@ -9,7 +10,7 @@ html{
   background-color: #a1e29c
 }
 /* Source css for tooltip: http://bl.ocks.org/Caged/6476579 */
-.d3-tip {
+.d3-tip{
   line-height: 1;
   font-weight: bold;
   padding: 12px;
@@ -19,7 +20,7 @@ html{
 }
 
 /* Creates a small triangle extender for the tooltip */
-.d3-tip:after {
+.d3-tip:before {
   box-sizing: border-box;
   display: inline;
   font-size: 12px;
@@ -32,7 +33,7 @@ html{
 }
 
 /* Style northward tooltips differently */
-.d3-tip.n:after {
+.d3-tip.n:before {
   margin: -1px 0 0 0;
   top: 100%;
   left: 0;
@@ -42,20 +43,21 @@ html{
 
 svg {
   position: absolute;
-  top: -5px;
+  bottom: 0px;
   left: 250px;
 }
 
 footer{
     position: absolute;
-    bottom: 00px;
+    height: 120px;
+    bottom: 0px;
     left: 1100px;
     padding-bottom: 15px;
 }
 
 #piechart{
     position: absolute;
-    bottom: 315px;
+    bottom: -16px;
     left: -250px;
     align-self: left;
 
@@ -65,7 +67,14 @@ footer{
     font-size: 16px;
     font-style: bold;
     text-align: left;
-    top: -10px;
+    bottom: 320px;
     left: -30px;
 
+}
+#description{
+    position: absolute;
+    box-sizing: border-box;
+    left: 1050px;
+    bottom: 120px;
+    width: 300px
 }

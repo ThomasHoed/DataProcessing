@@ -1,8 +1,6 @@
 # name: Thomas Hoedeman
 # student number: 10318070
 
-
-# import
 from tkinter.filedialog import askopenfilename
 import csv
 import json
@@ -12,7 +10,6 @@ inputPaths = ["hpi-data-2016.csv", "worldhappiness2016.csv"]
 selection = ["first", "second"]
 for idx, input in enumerate(inputPaths):
     while not inputPaths[idx][-4:] == '.csv':
-        # print instruction
         print(f"Please open the {selection[idx]}.csv file")
 
         # input user interface
@@ -22,14 +19,8 @@ for idx, input in enumerate(inputPaths):
 dataSets = []
 for path in inputPaths:
     print(path)
-    # open csv file
     with open(path, "r") as csvfile:
-
-        # read data
         currentData = csv.reader(csvfile)
-
-
-
         dataSets.append([line for line in currentData])
 
 # remove empty cells
@@ -40,7 +31,7 @@ for idx, data in enumerate(dataSets):
             break
     dataSets[idx] = dataSets[idx][0:row_idx]
 
-# select if countries are present in both datasets
+# select data from both datasets if countries are present in both
 countries = dict()
 for data in dataSets:
     for row in data[1:]:
@@ -50,7 +41,6 @@ for data in dataSets:
         countries[row[0]] += 1
 
 selected_countries = [country for country in countries if countries[country] == 3]
-deleted = [country for country in countries if countries[country] != 3]
 
 outputJSON = dict()
 for country_name in selected_countries:
